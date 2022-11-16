@@ -1,6 +1,7 @@
 const express = require('express');
 
 const app = express();
+const auth = require('./route/users')
 const bookRoute = require('./route/bookRoute');
 const { port, MONGO_DB_URI }  =  require('./config');
 const connectDB = require('./database/connectDB');
@@ -8,8 +9,18 @@ const connectDB = require('./database/connectDB');
 app.use(express.json())
 app.use(express.urlencoded({extended : true}))
 
+
+
+app.use('/auth', auth)
 app.use('/books', bookRoute);
 
+//homepage
+app.get('/', (req, res) => {
+    res.status(200)
+    .json({
+        message: 'Homepage'
+    })
+})
 //404 - invalid routes handler
 app.all('*', (req, res) =>{
     res.status(404)

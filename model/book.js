@@ -21,6 +21,11 @@ const bookSchema = new mongoose.Schema({
         type: Date,
         require : [true, 'Please enter the year the book was created']
     },
+    createdBy : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
 })
 
 
