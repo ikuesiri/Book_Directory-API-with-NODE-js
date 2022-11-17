@@ -7,21 +7,24 @@ const bookSchema = new mongoose.Schema({
         type: String,
         required:[ true, 'Please enter the title of the book'],
         unique : [true, "title already exists, please try another title"],
+        trim: true,
     },
     
     author:{
         type: String,
         required: [true, 'Please enter the name of the author'],
+        trim: true,
     },
     ISBN:{
         type: String,
         default: 'N/A',
+        unique: true,
     },
     year:{
         type: Date,
         require : [true, 'Please enter the year the book was created']
     },
-    createdBy : {
+    addedBy : {
         type : mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true

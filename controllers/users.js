@@ -1,3 +1,4 @@
+const { findOne } = require('../model/users');
 const UserModel = require('../model/users');
 
 
@@ -22,6 +23,7 @@ const registerUser = async(req, res, next ) =>{
             success : true,
             message : `You've successfully Signed Up`,
             username,
+            userID : user._id,
             token
 
 
@@ -56,6 +58,7 @@ const loginUser = async(req, res, next)=>{
     res.status(200).json({
         success : true,
         message : `You've successfully logged in`,
+        userID : user._id,
         username,
         token
     })
@@ -66,4 +69,65 @@ const loginUser = async(req, res, next)=>{
 }
 
 
-module.exports = {registerUser, loginUser }
+// update account
+
+const updateUser = async(req, res, next) => {
+    
+    
+    const{ username, password } = req.body;
+    try {
+   
+    if(req.user.userID !== req.params.userID){
+
+        return res.status(401).json({messsage : 'Unauthorized'})
+    }
+
+        const user = await UserModel.findOne({ _id :  req.user.userID })
+
+
+        user.username = username; //reg.body.username;
+        user.password = password; //reg.body.username;
+        
+        await user.save()
+
+
+        res.status(200).json({ 
+            success : true,
+            user: {
+                userID : user._id,
+                username : user.username,
+                
+            }
+        });
+         
+    }catch (error) {
+        next(error)
+        
+    }
+
+}
+
+const deleteUser = async(req, res, next) => {
+         
+        
+    try {
+
+        if(req.user.userID !== req.params.userID){
+            return res.status(401).json({messsage : 'Unauthorized'})
+        }
+        
+        const user = await UserModel.findOne({ _id : req.user.userID})
+        
+        if(!user){
+            return res.status(401).json({messsage : 'Unauthorized'})
+        }
+
+
+        user.delete()
+        res.status(200).json({ success : true, message: `Your account has been successfully deleted`})
+    } catch (error) {
+        next(error)
+    }
+}
+
+module.exports = {registerUser, loginUser, updateUser, deleteUser }
