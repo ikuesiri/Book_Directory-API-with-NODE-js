@@ -1,6 +1,8 @@
 const express = require('express');
 
 const app = express();
+
+const authenticate = require('./authentication/authenticate')
 const auth = require('./route/users')
 const bookRoute = require('./route/bookRoute');
 const { port, MONGO_DB_URI }  =  require('./config');
@@ -12,7 +14,7 @@ app.use(express.urlencoded({extended : true}))
 
 
 app.use('/auth', auth)
-app.use('/books', bookRoute);
+app.use('/books', authenticate,  bookRoute);
 
 //homepage
 app.get('/', (req, res) => {

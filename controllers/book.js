@@ -26,6 +26,7 @@ const createBook = async(req , res, next) =>{
 //getting a list of all books
 
 const getBooks =  async(req , res, next ) =>{
+    
     try {
         const books = await BookModel.find({})
         res.status(200).json({ success : true, books, nbHits : books.length})
